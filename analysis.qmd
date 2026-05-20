@@ -1,0 +1,60 @@
+---
+title: "Life Tables using HistData"
+author: "Alex Delamer"
+format: 
+    html:
+        theme: flatly
+
+execute: 
+  echo: false
+  message: false
+  warning: false
+---
+
+```{r setup}
+library(HistData)
+library(tidyverse)
+library(kableExtra)
+```
+
+### Filtering Breslau data
+
+Filtering for observations where age is greater than or equal to 5.
+
+```{r filtering}
+#| echo: true
+
+breslau_filtered <- Breslau |> 
+    filter(age >= 5)
+```
+
+#### Summary of filtered data
+
+The below table (@tbl-breslau) shows the average age of people who died in the city of Breslau (now Wroclaw) in Poland between the years 1687 and 1691 inclusive.
+
+```{r summary}
+#| label: tbl-breslau
+#| tbl-cap: Average age of death in Breslau, 1687-1691
+
+breslau_summary <- breslau_filtered |> 
+    pivot_longer(cols = starts_with("year"), names_to = "year", values_to = "count") |> 
+    mutate(year = str_remove(year, "year")) |> 
+    group_by(year) |> 
+    summarise(average_age = round(weighted.mean(age, count), 2), total_deaths = sum(count))
+
+kable(breslau_summary) |> 
+    kable_styling(bootstrap_options = c("striped", "hover"), fixed_thead = TRUE)
+```
+
+#### Plot of mortality in Breslau
+
+As we can see in @fig-breslau, the average age of death for citizens of Breslau between 1687 and 1691 stayed relatively consistent.
+
+```{r}
+#| label: fig-breslau
+#| fig-cap: Average age of death in Breslau, 1687-1691
+
+ggplot(breslau_summary, aes(x = year, y = average_age)) +
+    geom_col(fill = "steelblue") +
+    labs(x = "Year", y = "Average age of death")
+```
