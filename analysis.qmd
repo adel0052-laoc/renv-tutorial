@@ -30,7 +30,7 @@ breslau_filtered <- Breslau |>
 
 #### Summary of filtered data
 
-The below table (@tbl-breslau) shows the average age of people who died in the city of Breslau (now Wroclaw) in Poland between the years 1687 and 1691 inclusive.
+The below table (@tbl-breslau) shows the average age of people who died in the city of Breslau (now Wrocław) in Poland between the years 1687 and 1691 inclusive.
 
 ```{r summary}
 #| label: tbl-breslau
